@@ -4,7 +4,7 @@ import firestore from './firestore';
 Middleware.initAdminSDK();
 
 class CollectionRef {
-   static exampleCollection = firestore.collection('exampleCollection');
+   static notification = firestore.collection('notification');
 }
 
 export default CollectionRef;
