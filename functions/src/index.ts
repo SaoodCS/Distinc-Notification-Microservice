@@ -12,6 +12,6 @@ app.use(Middleware.verifyApiKey);
 // API Endpoints:
 app.post('/setFcmToken', setFcmToken);
 
-// Export to Firebase Cloud Functions:
+// Export Microservice:
 const notification = functions.https.onRequest(app);
 export { notification };
