@@ -1,6 +1,4 @@
-export interface IDeleteNotifScheduleReqBody {
-   
-}
+export interface IDeleteNotifScheduleReqBody {}
 
 export default class DeleteNotifScheduleReqBody {
    static isValid(body: unknown): body is IDeleteNotifScheduleReqBody {

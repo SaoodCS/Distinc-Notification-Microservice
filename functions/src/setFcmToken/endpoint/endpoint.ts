@@ -1,5 +1,4 @@
 import type * as express from 'express';
-import * as functions from 'firebase-functions';
 import ErrorChecker from '../../global/helpers/errorCheckers/ErrorChecker';
 import ErrorHandler from '../../global/helpers/errorHandlers/ErrorHandler';
 import FirebaseHelper from '../../global/helpers/firebaseHelpers/FirebaseHelper';
@@ -27,10 +26,6 @@ export default async function setFcmToken(
       await CollectionRef.notification.doc(uid).set({ fcmToken: fcmToken }, { merge: true });
 
       // Next set up push notif that sends "hello world" every 10 mins
-      
-
-
-
 
       return res
          .status(200)
