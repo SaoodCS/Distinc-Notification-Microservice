@@ -6,7 +6,7 @@ import ErrorThrower from '../../global/interface/ErrorThrower';
 import CollectionRef from '../../global/utils/CollectionRef';
 import { resCodes } from '../../global/utils/resCode';
 import SetNotifScheduleReqBody, {
-   ISetNotifScheduleReqBody,
+   type ISetNotifScheduleReqBody,
 } from '../reqBodyClass/SetNotifScheduleReqBody';
 
 export default async function setNotifSchedule(
