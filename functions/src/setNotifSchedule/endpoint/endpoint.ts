@@ -38,12 +38,14 @@ export default async function setNotifSchedule(
       if (!notifDoc) {
          throw new ErrorThrower('Notification document not found', resCodes.NOT_FOUND.code);
       }
+
+      // If user has no notif schedule, return successfully updated fcm token msg
       const notifSchedule = notifDoc.notifSchedule;
       if (!notifSchedule) {
          return res.status(200).send({ message: 'Successfully updated fcm token' });
       }
 
-      // Create Notification Schedule using Cloud Scheduler
+      // If user does have notif schedule, create a scheduler which sends a push notif to the user at the specified time and recurrence
       const userFcmToken = notifDoc.fcmToken;
       const startDateAndTime = new Date(notifSchedule.startDate);
       const recurrence = notifSchedule.recurrence;
