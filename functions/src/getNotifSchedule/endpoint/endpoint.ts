@@ -15,18 +15,13 @@ export default async function getNotifSchedule(
       if (!uid) {
          throw new ErrorThrower(error!, resCodes.UNAUTHORIZED.code);
       }
-      const notif = (await CollectionRef.notification.doc(uid).get()).data();
+      const notifSchedule = (await CollectionRef.notification.doc(uid).get()).data();
 
-      if (!notif) {
-         return res.status(200).send({});
-      }
-      const notifSchedule = notif.notifSchedule;
       if (!notifSchedule) {
          return res.status(200).send({});
       }
 
       return res.status(200).send(notifSchedule);
-      
    } catch (error: unknown) {
       if (ErrorChecker.isErrorThrower(error)) {
          return ErrorHandler.handleErrorThrower(error, res);

@@ -5,7 +5,9 @@ import FirebaseHelper from '../../global/helpers/firebaseHelpers/FirebaseHelper'
 import ErrorThrower from '../../global/interface/ErrorThrower';
 import CollectionRef from '../../global/utils/CollectionRef';
 import { resCodes } from '../../global/utils/resCode';
-import SetNotifScheduleReqBody from '../reqBodyClass/SetNotifScheduleReqBody';
+import SetNotifScheduleReqBody, {
+   ISetNotifScheduleReqBody,
+} from '../reqBodyClass/SetNotifScheduleReqBody';
 
 export default async function setNotifSchedule(
    req: express.Request,
@@ -21,21 +23,38 @@ export default async function setNotifSchedule(
          throw new ErrorThrower(error!, resCodes.UNAUTHORIZED.code);
       }
 
+      // Update notification document
       await CollectionRef.notification.doc(uid).set(
          {
-            notifSchedule: reqBody,
+            ...reqBody,
          },
          { merge: true },
       );
 
-      return res.status(200).send({ message: 'Successfully set notif schedule' });
-   } catch (error: unknown) {
-      // Error handling code for caught errors here
+      // Check if user has a notif schedule
+      const notifDoc = (
+         await CollectionRef.notification.doc(uid).get()
+      ).data() as ISetNotifScheduleReqBody;
+      if (!notifDoc) {
+         throw new ErrorThrower('Notification document not found', resCodes.NOT_FOUND.code);
+      }
+      const notifSchedule = notifDoc.notifSchedule;
+      if (!notifSchedule) {
+         return res.status(200).send({ message: 'Successfully updated fcm token' });
+      }
 
+      // Create Notification Schedule using Cloud Scheduler
+      const userFcmToken = notifDoc.fcmToken;
+      const startDateAndTime = new Date(notifSchedule.startDate);
+      const recurrence = notifSchedule.recurrence;
+
+      return res.status(200).send({ message: 'Successfully set and created notif scheduler' });
+
+      // Error Handling:
+   } catch (error: unknown) {
       if (ErrorChecker.isErrorThrower(error)) {
          return ErrorHandler.handleErrorThrower(error, res);
       }
-
       return res.status(resCodes.INTERNAL_SERVER.code).send({ error: error });
    }
 }

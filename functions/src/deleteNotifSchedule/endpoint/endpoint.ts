@@ -26,12 +26,9 @@ export default async function deleteNotifSchedule(
    try {
       return res.status(200).send({ message: 'Successfully Deleted Schedule' });
    } catch (error: unknown) {
-      // Error handling code for caught errors here
-
       if (ErrorChecker.isErrorThrower(error)) {
          return ErrorHandler.handleErrorThrower(error, res);
       }
-
       return res.status(resCodes.INTERNAL_SERVER.code).send({ error: error });
    }
 }
