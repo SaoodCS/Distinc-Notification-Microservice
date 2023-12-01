@@ -1,11 +1,11 @@
 import type * as express from 'express';
-import * as admin from 'firebase-admin';
-import type { Message } from 'firebase-admin/lib/messaging/messaging-api';
 import ErrorChecker from '../../global/helpers/errorCheckers/ErrorChecker';
 import ErrorHandler from '../../global/helpers/errorHandlers/ErrorHandler';
 import FirebaseHelper from '../../global/helpers/firebaseHelpers/FirebaseHelper';
 import ErrorThrower from '../../global/interface/ErrorThrower';
+import Middleware from '../../global/middleware/Middleware';
 import CollectionRef from '../../global/utils/CollectionRef';
+import messaging from '../../global/utils/messaging';
 import { resCodes } from '../../global/utils/resCode';
 import SetNotifScheduleReqBody, {
    type ISetNotifScheduleReqBody,
@@ -25,14 +25,6 @@ export default async function setNotifSchedule(
          throw new ErrorThrower(error!, resCodes.UNAUTHORIZED.code);
       }
 
-      // Update notification document
-      await CollectionRef.notification.doc(uid).set(
-         {
-            ...reqBody,
-         },
-         { merge: true },
-      );
-
       // Check if user has a notif schedule
       const notifDoc = (
          await CollectionRef.notification.doc(uid).get()
@@ -49,34 +41,26 @@ export default async function setNotifSchedule(
 
       // If user does have notif schedule, create a scheduler which sends a push notif to the user at the specified time and recurrence
       const userFcmToken = notifDoc.fcmToken;
-      const startDateAndTime = new Date(notifSchedule.startDate);
-      const recurrence = notifSchedule.recurrence;
-      const scheduleRepeat =
-         recurrence === 'Daily'
-            ? 'every 24 hours'
-            : recurrence === 'Weekly'
-            ? 'every 7 days'
-            : recurrence === 'Monthly'
-            ? 'every 30 days'
-            : recurrence === 'Yearly'
-            ? 'every 365 days'
-            : 'every 24 hours';
 
-      // test sending a push notif:
-      const message: Message = {
-         data: {
-            title: 'Test Title',
-            body: 'Test Body',
-         },
-         token: userFcmToken,
-      };
-      await admin.messaging().send(message);
-
+      try {
+         const message = {
+            notification: {
+               title: 'Test Title',
+               body: 'Test Body',
+            },
+            token: userFcmToken,
+         };
+         await messaging.send(message);
+         console.log('Successfully sent message');
+      } catch (error) {
+         console.log('ERROR: ', error);
+      }
       return res.status(200).send({ message: 'Successfully set and created notif scheduler' });
 
       // Error Handling:
    } catch (error: unknown) {
       if (ErrorChecker.isErrorThrower(error)) {
+         console.log('ERRRRORR: ', error);
          return ErrorHandler.handleErrorThrower(error, res);
       }
       return res.status(resCodes.INTERNAL_SERVER.code).send({ error: error });
