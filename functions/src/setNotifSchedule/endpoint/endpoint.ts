@@ -39,34 +39,34 @@ export default async function setNotifSchedule(
          throw new ErrorThrower('Notification document not found', resCodes.NOT_FOUND.code);
       }
 
-      // If user has no notif schedule, return successfully updated fcm token msg
-      const notifSchedule = notifDoc.notifSchedule;
-      if (!notifSchedule) {
-         return res.status(200).send({ message: 'Successfully updated fcm token' });
-      }
-
-      // If user does have notif schedule, create a scheduler which sends a push notif to the user at the specified time and recurrence
       const userFcmToken = notifDoc.fcmToken;
 
-      try {
-         const message = {
-            notification: {
-               title: 'Test Title',
-               body: 'Test Body',
-            },
-            token: userFcmToken,
-         };
-         await messaging.send(message);
-         console.log('Successfully sent message');
-      } catch (error) {
-         console.log('ERROR: ', error);
-      }
+      const payload = {
+         token: userFcmToken,
+         notification: {
+            title: 'Test Notification',
+            body: 'Test Notification Body',
+         },
+         data: {
+            body: 'Test Notification Body',
+         },
+      };
+
+      console.log('payload: ', payload, true);
+      messaging
+         .send(payload)
+         .then((response) => {
+            console.log('Successfully sent message:', response);
+         })
+         .catch((error) => {
+            console.log('Error sending message:', error);
+         });
+
       return res.status(200).send({ message: 'Successfully set and created notif scheduler' });
 
       // Error Handling:
    } catch (error: unknown) {
       if (ErrorChecker.isErrorThrower(error)) {
-         console.log('ERRRRORR: ', error);
          return ErrorHandler.handleErrorThrower(error, res);
       }
       return res.status(resCodes.INTERNAL_SERVER.code).send({ error: error });
