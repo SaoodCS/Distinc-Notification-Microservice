@@ -3,7 +3,6 @@ import ErrorChecker from '../../global/helpers/errorCheckers/ErrorChecker';
 import ErrorHandler from '../../global/helpers/errorHandlers/ErrorHandler';
 import FirebaseHelper from '../../global/helpers/firebaseHelpers/FirebaseHelper';
 import ErrorThrower from '../../global/interface/ErrorThrower';
-import Middleware from '../../global/middleware/Middleware';
 import CollectionRef from '../../global/utils/CollectionRef';
 import messaging from '../../global/utils/messaging';
 import { resCodes } from '../../global/utils/resCode';
@@ -24,6 +23,13 @@ export default async function setNotifSchedule(
       if (!uid) {
          throw new ErrorThrower(error!, resCodes.UNAUTHORIZED.code);
       }
+
+      await CollectionRef.notification.doc(uid).set(
+         {
+            ...reqBody,
+         },
+         { merge: true },
+      );
 
       // Check if user has a notif schedule
       const notifDoc = (
