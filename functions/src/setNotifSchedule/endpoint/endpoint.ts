@@ -1,4 +1,7 @@
 import type * as express from 'express';
+import * as admin from 'firebase-admin';
+import { Message } from 'firebase-admin/lib/messaging/messaging-api';
+import * as functions from 'firebase-functions';
 import ErrorChecker from '../../global/helpers/errorCheckers/ErrorChecker';
 import ErrorHandler from '../../global/helpers/errorHandlers/ErrorHandler';
 import FirebaseHelper from '../../global/helpers/firebaseHelpers/FirebaseHelper';
@@ -49,6 +52,26 @@ export default async function setNotifSchedule(
       const userFcmToken = notifDoc.fcmToken;
       const startDateAndTime = new Date(notifSchedule.startDate);
       const recurrence = notifSchedule.recurrence;
+      const scheduleRepeat =
+         recurrence === 'Daily'
+            ? 'every 24 hours'
+            : recurrence === 'Weekly'
+            ? 'every 7 days'
+            : recurrence === 'Monthly'
+            ? 'every 30 days'
+            : recurrence === 'Yearly'
+            ? 'every 365 days'
+            : 'every 24 hours';
+
+      // test sending a push notif:
+      const message: Message = {
+         data: {
+            title: 'Test Title',
+            body: 'Test Body',
+         },
+         token: userFcmToken,
+      };
+      await admin.messaging().send(message);
 
       return res.status(200).send({ message: 'Successfully set and created notif scheduler' });
 
