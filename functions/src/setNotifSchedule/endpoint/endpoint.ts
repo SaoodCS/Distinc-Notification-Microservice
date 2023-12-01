@@ -38,28 +38,27 @@ export default async function setNotifSchedule(
       if (!notifDoc) {
          throw new ErrorThrower('Notification document not found', resCodes.NOT_FOUND.code);
       }
-
       const userFcmToken = notifDoc.fcmToken;
 
       const payload = {
-         token: userFcmToken,
          notification: {
             title: 'Test Notification',
             body: 'Test Notification Body',
          },
-         data: {
-            body: 'Test Notification Body',
-         },
       };
 
-      console.log('payload: ', payload, true);
+      const options = {
+         priority: 'high',
+         timeToLive: 60 * 60 * 24,
+      };
+
       messaging
-         .send(payload)
+         .sendToDevice(userFcmToken, payload, options)
          .then((response) => {
             console.log('Successfully sent message:', response);
          })
          .catch((error) => {
-            console.log('Error sending message:', error);
+            return res.status(resCodes.INTERNAL_SERVER.code).send({ error: error });
          });
 
       return res.status(200).send({ message: 'Successfully set and created notif scheduler' });
