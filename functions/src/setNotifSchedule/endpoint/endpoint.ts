@@ -1,15 +1,11 @@
 import type * as express from 'express';
-import type { Message } from 'firebase-admin/lib/messaging/messaging-api';
 import ErrorChecker from '../../global/helpers/errorCheckers/ErrorChecker';
 import ErrorHandler from '../../global/helpers/errorHandlers/ErrorHandler';
 import FirebaseHelper from '../../global/helpers/firebaseHelpers/FirebaseHelper';
 import ErrorThrower from '../../global/interface/ErrorThrower';
 import CollectionRef from '../../global/utils/CollectionRef';
-import messaging from '../../global/utils/messaging';
 import { resCodes } from '../../global/utils/resCode';
-import SetNotifScheduleReqBody, {
-   type ISetNotifScheduleReqBody,
-} from '../reqBodyClass/SetNotifScheduleReqBody';
+import SetNotifScheduleReqBody from '../reqBodyClass/SetNotifScheduleReqBody';
 
 export default async function setNotifSchedule(
    req: express.Request,
@@ -31,52 +27,6 @@ export default async function setNotifSchedule(
          },
          { merge: true },
       );
-
-      // Check if user has a notif schedule
-      const notifDoc = (
-         await CollectionRef.notification.doc(uid).get()
-      ).data() as ISetNotifScheduleReqBody;
-      if (!notifDoc) {
-         throw new ErrorThrower('Notification document not found', resCodes.NOT_FOUND.code);
-      }
-      const userFcmToken = notifDoc.fcmToken;
-
-      const payload: Message = {
-         notification: {
-            title: 'Test Notification',
-            body: 'Test Notification Body',
-         },
-         data: {
-            title: 'Test Notification',
-            body: 'Test Notification Body',
-         },
-         token: userFcmToken,
-      };
-
-      // set timeout of 5 seconds:
-      setTimeout(() => {
-         console.log('Sending notification to user');
-         messaging
-            .send(payload)
-            .then((response) => {
-               console.log('Successfully sent message:', response);
-            })
-            .catch((error) => {
-               console.log(error);
-               return res.status(resCodes.INTERNAL_SERVER.code).send({ error: error });
-            });
-      }, 5000);
-
-      // messaging
-      //    .send(payload)
-      //    .then((response) => {
-      //       console.log('Successfully sent message:', response);
-      //    })
-      //    .catch((error) => {
-      //       console.log(error);
-      //       return res.status(resCodes.INTERNAL_SERVER.code).send({ error: error });
-      //    });
-
       return res.status(200).send({ message: 'Successfully set and created notif scheduler' });
 
       // Error Handling:

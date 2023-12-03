@@ -1,36 +1,77 @@
-import type IHelperError from '../../../interface/IObjWithErrProp';
-import ErrorChecker from '../../errorCheckers/ErrorChecker';
-
-class ArrayOfObjects {
-   public static objectsWithVal<T>(array: T[], propertyValue: T[keyof T]): T[] | IHelperError {
-      const obj = array.filter((item) => {
-         for (const key in item) {
-            if (item[key] === propertyValue) {
-               return item;
+export default class ArrayOfObjects {
+   static sort<T>(arr: T[], key: keyof T, descending?: boolean): T[] {
+      if (descending) {
+         return arr.sort((a, b) => {
+            if (a[key] > b[key]) {
+               return -1;
             }
-         }
-      });
-      if (obj.length === 0) {
-         return {
-            error: `No Objects Found With Val: ${propertyValue}.`,
-         };
+            if (a[key] < b[key]) {
+               return 1;
+            }
+            return 0;
+         });
       }
-      return obj;
+
+      return arr.sort((a, b) => {
+         if (a[key] < b[key]) {
+            return -1;
+         }
+         if (a[key] > b[key]) {
+            return 1;
+         }
+         return 0;
+      });
    }
 
-   static objectWithVal<T>(
-      array: T[],
-      propertyValue: T[keyof T],
-   ): T | undefined | { error: string } {
-      const object = this.objectsWithVal(array, propertyValue);
-      if (ErrorChecker.hasErrorProp(object)) return object;
-      if (object.length > 1) {
-         return {
-            error: `Multiple Objects Found With Val: ${propertyValue}.`,
-         };
-      }
-      return object[0];
+   static getObjWithKeyValuePair<T>(arr: T[], key: keyof T, value: T[keyof T]): T {
+      return arr.find((obj) => obj[key] === value) as T;
+   }
+
+   static getObjectsWithKeyValuePair<T>(arr: T[], key: keyof T, value: T[keyof T]): T[] {
+      return arr.filter((obj) => obj[key] === value) as T[];
+   }
+
+   static sumKeyValues<T>(arr: T[], key: keyof T): number {
+      return arr.reduce((acc, curr) => acc + Number(curr[key]), 0);
+   }
+
+   static deleteDuplicates<T>(arr: T[], key: keyof T): T[] {
+      return arr.filter((obj, index, self) => self.findIndex((o) => o[key] === obj[key]) === index);
+   }
+
+   static filterOut<T>(arr: T[], key: keyof T, value: T[keyof T]): T[] {
+      return arr.filter((obj) => obj[key] !== value);
+   }
+
+   static filterIn<T>(arr: T[], key: keyof T, value: T[keyof T]): T[] {
+      return arr.filter((obj) => obj[key] === value);
+   }
+
+   static combine<T>(arr1: T[], arr2: T[]): T[] {
+      return arr1.concat(arr2);
+   }
+
+   static isEmpty<T>(arr: T[]): boolean {
+      return arr.length === 0;
+   }
+
+   static isNotEmpty<T>(arr: T[]): boolean {
+      return arr.length > 0;
+   }
+
+   static doAllObjectsHaveKeyValuePair<T>(arr: T[], key: keyof T, value: T[keyof T]): boolean {
+      return arr.every((obj) => obj[key] === value);
+   }
+
+   static getArrOfValuesFromKey<T, K extends keyof T>(arr: T[], key: K): T[K][] {
+      return arr.map((obj) => obj[key]);
+   }
+
+   static getArrOfValuesFromNestedKey<T, K extends keyof T, N extends keyof T[K]>(
+      arr: T[],
+      outerKey: K,
+      nestedKey: N,
+   ): T[K][N][] {
+      return arr.map((obj) => obj[outerKey][nestedKey]);
    }
 }
-
-export default ArrayOfObjects;
