@@ -1,4 +1,5 @@
 import type * as express from 'express';
+import { Message } from 'firebase-admin/lib/messaging/messaging-api';
 import ErrorChecker from '../../global/helpers/errorCheckers/ErrorChecker';
 import ErrorHandler from '../../global/helpers/errorHandlers/ErrorHandler';
 import FirebaseHelper from '../../global/helpers/firebaseHelpers/FirebaseHelper';
@@ -40,26 +41,41 @@ export default async function setNotifSchedule(
       }
       const userFcmToken = notifDoc.fcmToken;
 
-      const payload = {
+      const payload: Message = {
          notification: {
             title: 'Test Notification',
             body: 'Test Notification Body',
          },
+         data: {
+            title: 'Test Notification',
+            body: 'Test Notification Body',
+         },
+         token: userFcmToken,
       };
 
-      const options = {
-         priority: 'high',
-         timeToLive: 60 * 60 * 24,
-      };
+      // set timeout of 5 seconds:
+      setTimeout(() => {
+         console.log('Sending notification to user');
+         messaging
+            .send(payload)
+            .then((response) => {
+               console.log('Successfully sent message:', response);
+            })
+            .catch((error) => {
+               console.log(error);
+               return res.status(resCodes.INTERNAL_SERVER.code).send({ error: error });
+            });
+      }, 5000);
 
-      messaging
-         .sendToDevice(userFcmToken, payload, options)
-         .then((response) => {
-            console.log('Successfully sent message:', response);
-         })
-         .catch((error) => {
-            return res.status(resCodes.INTERNAL_SERVER.code).send({ error: error });
-         });
+      // messaging
+      //    .send(payload)
+      //    .then((response) => {
+      //       console.log('Successfully sent message:', response);
+      //    })
+      //    .catch((error) => {
+      //       console.log(error);
+      //       return res.status(resCodes.INTERNAL_SERVER.code).send({ error: error });
+      //    });
 
       return res.status(200).send({ message: 'Successfully set and created notif scheduler' });
 
