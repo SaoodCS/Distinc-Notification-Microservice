@@ -1,5 +1,5 @@
 import type * as express from 'express';
-import { Message } from 'firebase-admin/lib/messaging/messaging-api';
+import type { Message } from 'firebase-admin/lib/messaging/messaging-api';
 import ErrorChecker from '../../global/helpers/errorCheckers/ErrorChecker';
 import ErrorHandler from '../../global/helpers/errorHandlers/ErrorHandler';
 import FirebaseHelper from '../../global/helpers/firebaseHelpers/FirebaseHelper';
