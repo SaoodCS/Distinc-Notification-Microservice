@@ -1,4 +1,3 @@
-// TODO: delete the "del cache" powershell script on the front-end (and in the package.json file)
 /* eslint-disable no-await-in-loop */
 import * as functions from 'firebase-functions';
 import DateHelper from '../global/helpers/dataTypes/dateHelper/DateHelper';
@@ -26,14 +25,15 @@ export default async function sendNotif(): Promise<void> {
 
       for (let i = 0; i < dueScheduledNotifs.length; i++) {
          const item = dueScheduledNotifs[i];
+         const updatedBadgeCount = item.badgeCount + 1;
          try {
             const response = await messaging.send({
                notification: {
-                  title: 'Distribute Your Income!',
+                  title: `Distribute Your Income! badgeCount:${updatedBadgeCount}`,
                   body: "It's time to distribute your income!",
                },
                data: {
-                  title: 'Distribute Your Income!',
+                  title: `Distribute Your Income! badgeCount:${updatedBadgeCount}`,
                   body: "It's time to distribute your income!",
                },
                token: item.fcmToken,
@@ -63,6 +63,7 @@ export default async function sendNotif(): Promise<void> {
                   ...item.notifSchedule,
                   nextDate: nextDate.toISOString(),
                },
+               badgeCount: updatedBadgeCount,
             },
             { merge: true },
          );

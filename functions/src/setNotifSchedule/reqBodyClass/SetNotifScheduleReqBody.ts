@@ -8,6 +8,7 @@ export interface INotifScheduleFormInputs {
 export interface ISetNotifScheduleReqBody {
    notifSchedule?: INotifScheduleFormInputs;
    fcmToken: string;
+   badgeCount: number;
 }
 
 export default class SetNotifScheduleReqBody {
@@ -15,7 +16,7 @@ export default class SetNotifScheduleReqBody {
       if (typeof body !== 'object' || body === null) {
          return false;
       }
-      const { notifSchedule, fcmToken } = body as ISetNotifScheduleReqBody;
+      const { notifSchedule, fcmToken, badgeCount } = body as ISetNotifScheduleReqBody;
       if (typeof fcmToken !== 'string') {
          return false;
       }
@@ -24,6 +25,9 @@ export default class SetNotifScheduleReqBody {
          if (typeof nextDate !== 'string' || typeof recurrence !== 'string') {
             return false;
          }
+      }
+      if (typeof badgeCount !== 'number') {
+         return false;
       }
       return true;
    }
