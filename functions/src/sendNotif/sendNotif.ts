@@ -1,4 +1,5 @@
 // TODO: make this more performative by using a batch write instead of updating each doc one by one / by taking the await out of the for loop and using Promise.all() instead + and refactor this func to make it more readable
+// TODO: sort out the github ci/cd pipeline so it works with deploying the firebase functions pub/sub scheduler
 /* eslint-disable no-await-in-loop */
 import type { Message } from 'firebase-admin/lib/messaging/messaging-api';
 import * as functions from 'firebase-functions';
