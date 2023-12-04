@@ -15,11 +15,11 @@ export default async function deleteNotifSettings(
    if (!uid) {
       throw new ErrorThrower(error!, resCodes.UNAUTHORIZED.code);
    }
-   const notif = (await CollectionRef.notification.doc(uid).get()).data();
-   if (!notif) {
+   const notifSettings = (await CollectionRef.notification.doc(uid).get()).data();
+   if (!notifSettings) {
       throw new ErrorThrower('User not found', resCodes.NOT_FOUND.code);
    }
-   if (!notif.notifSchedule) {
+   if (!notifSettings.notifSchedule) {
       throw new ErrorThrower('No schedule found', resCodes.NOT_FOUND.code);
    }
    await CollectionRef.notification.doc(uid).update({ notifSchedule: FieldValue.delete() });

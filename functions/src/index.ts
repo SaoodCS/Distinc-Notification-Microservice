@@ -4,7 +4,6 @@ import deleteNotifSettings from './deleteNotifSettings/endpoint/endpoint';
 import getNotifSettings from './getNotifSettings/endpoint/endpoint';
 import Middleware from './global/middleware/Middleware';
 import sendNotif from './sendNotif/sendNotif';
-import setFcmToken from './setFcmToken/endpoint/endpoint';
 import setNotifSettings from './setNotifSettings/endpoint/endpoint';
 
 const app = express();
@@ -14,8 +13,6 @@ app.use(Middleware.verifyHeaders);
 app.use(Middleware.verifyApiKey);
 
 // API Endpoints:
-app.post('/setFcmToken', setFcmToken);
-
 app.get('/getNotifSettings', getNotifSettings);
 app.post('/setNotifSettings', setNotifSettings);
 app.post('/deleteNotifSettings', deleteNotifSettings);
