@@ -29,12 +29,11 @@ export default async function sendNotif(): Promise<void> {
          try {
             const response = await messaging.send({
                notification: {
-                  title: `Distribute Your Income! badgeCount:${updatedBadgeCount}`,
+                  title: `Distribute Your Income!`,
                   body: "It's time to distribute your income!",
                },
                data: {
-                  title: `Distribute Your Income! badgeCount:${updatedBadgeCount}`,
-                  body: "It's time to distribute your income!",
+                  badgeCount: updatedBadgeCount.toString(),
                },
                token: item.fcmToken,
             });
