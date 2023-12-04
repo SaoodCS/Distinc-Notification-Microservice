@@ -34,6 +34,7 @@ export default async function sendNotif(): Promise<void> {
                },
                data: {
                   badgeCount: updatedBadgeCount.toString(),
+                  onClickLink: 'https://distinc-dev.web.app/main/distribute',
                },
                token: item.fcmToken,
             });
