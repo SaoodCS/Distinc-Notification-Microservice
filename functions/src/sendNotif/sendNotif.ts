@@ -28,13 +28,11 @@ export default async function sendNotif(): Promise<void> {
          const updatedBadgeCount = item.badgeCount + 1;
          try {
             const response = await messaging.send({
-               notification: {
-                  title: `Distribute Your Income!`,
-                  body: "It's time to distribute your income!",
-               },
                data: {
                   badgeCount: updatedBadgeCount.toString(),
                   onClickLink: 'https://distinc-dev.web.app/main/distribute',
+                  title: 'Distribute Your Income!',
+                  body: "It's time to distribute your income!",
                },
                token: item.fcmToken,
             });
