@@ -5,35 +5,28 @@ import FirebaseHelper from '../../global/helpers/firebaseHelpers/FirebaseHelper'
 import ErrorThrower from '../../global/interface/ErrorThrower';
 import CollectionRef from '../../global/utils/CollectionRef';
 import { resCodes } from '../../global/utils/resCode';
-import SetNotifScheduleReqBody from '../reqBodyClass/SetNotifScheduleReqBody';
 
-export default async function setNotifSchedule(
+export default async function getNotifSettings(
    req: express.Request,
    res: express.Response,
 ): Promise<express.Response> {
-   const reqBody = req.body;
    try {
-      if (!SetNotifScheduleReqBody.isValid(reqBody)) {
-         throw new ErrorThrower('Invalid Body Request', resCodes.BAD_REQUEST.code);
-      }
       const { uid, error } = await FirebaseHelper.getUidFromAuthToken(req.headers.authorization);
       if (!uid) {
          throw new ErrorThrower(error!, resCodes.UNAUTHORIZED.code);
       }
+      const notifSettings = (await CollectionRef.notification.doc(uid).get()).data();
 
-      await CollectionRef.notification.doc(uid).set(
-         {
-            ...reqBody,
-         },
-         { merge: true },
-      );
-      return res.status(200).send({ message: 'Successfully set and created notif scheduler' });
+      if (!notifSettings) {
+         return res.status(200).send({});
+      }
 
-      // Error Handling:
+      return res.status(200).send(notifSettings);
    } catch (error: unknown) {
       if (ErrorChecker.isErrorThrower(error)) {
          return ErrorHandler.handleErrorThrower(error, res);
       }
+
       return res.status(resCodes.INTERNAL_SERVER.code).send({ error: error });
    }
 }

@@ -6,15 +6,15 @@ import CollectionRef from '../global/utils/CollectionRef';
 import messaging from '../global/utils/messaging';
 import type {
    INotifScheduleFormInputs,
-   ISetNotifScheduleReqBody,
-} from '../setNotifSchedule/reqBodyClass/SetNotifScheduleReqBody';
+   ISetNotifSettingsReqBody,
+} from '../setNotifSettings/reqBodyClass/SetNotifSettingsReqBody';
 
 export default async function sendNotif(): Promise<void> {
    try {
       const notifDocs = await CollectionRef.notification
          .where('notifSchedule.nextDate', '<=', new Date().toISOString())
          .get();
-      type IDueNotification = Omit<ISetNotifScheduleReqBody, 'notifSchedule'> & {
+      type IDueNotification = Omit<ISetNotifSettingsReqBody, 'notifSchedule'> & {
          notifSchedule: INotifScheduleFormInputs;
       };
       const dueScheduledNotifs = notifDocs.docs.map((doc) => doc.data()) as IDueNotification[];

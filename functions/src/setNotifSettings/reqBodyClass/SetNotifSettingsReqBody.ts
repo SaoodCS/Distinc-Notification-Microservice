@@ -5,18 +5,18 @@ export interface INotifScheduleFormInputs {
    recurrence: IRecurrenceOptions;
 }
 
-export interface ISetNotifScheduleReqBody {
+export interface ISetNotifSettingsReqBody {
    notifSchedule?: INotifScheduleFormInputs;
    fcmToken: string;
    badgeCount: number;
 }
 
-export default class SetNotifScheduleReqBody {
-   static isValid(body: unknown): body is ISetNotifScheduleReqBody {
+export default class SetNotifSettingsReqBody {
+   static isValid(body: unknown): body is ISetNotifSettingsReqBody {
       if (typeof body !== 'object' || body === null) {
          return false;
       }
-      const { notifSchedule, fcmToken, badgeCount } = body as ISetNotifScheduleReqBody;
+      const { notifSchedule, fcmToken, badgeCount } = body as ISetNotifSettingsReqBody;
       if (typeof fcmToken !== 'string') {
          return false;
       }

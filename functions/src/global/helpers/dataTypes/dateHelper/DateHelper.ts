@@ -1,4 +1,4 @@
-import type { IRecurrenceOptions } from '../../../../setNotifSchedule/reqBodyClass/SetNotifScheduleReqBody';
+import type { IRecurrenceOptions } from '../../../../setNotifSettings/reqBodyClass/SetNotifSettingsReqBody';
 
 export default class DateHelper {
    static updateDate(date: Date, recurrence: IRecurrenceOptions): Date {

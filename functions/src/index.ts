@@ -1,11 +1,11 @@
 import * as express from 'express';
 import * as functions from 'firebase-functions';
-import deleteNotifSchedule from './deleteNotifSchedule/endpoint/endpoint';
-import getNotifSchedule from './getNotifSchedule/endpoint/endpoint';
+import deleteNotifSettings from './deleteNotifSettings/endpoint/endpoint';
+import getNotifSettings from './getNotifSettings/endpoint/endpoint';
 import Middleware from './global/middleware/Middleware';
 import sendNotif from './sendNotif/sendNotif';
 import setFcmToken from './setFcmToken/endpoint/endpoint';
-import setNotifSchedule from './setNotifSchedule/endpoint/endpoint';
+import setNotifSettings from './setNotifSettings/endpoint/endpoint';
 
 const app = express();
 Middleware.initAdminSDK();
@@ -16,9 +16,9 @@ app.use(Middleware.verifyApiKey);
 // API Endpoints:
 app.post('/setFcmToken', setFcmToken);
 
-app.get('/getNotifSchedule', getNotifSchedule);
-app.post('/setNotifSchedule', setNotifSchedule);
-app.post('/deleteNotifSchedule', deleteNotifSchedule);
+app.get('/getNotifSettings', getNotifSettings);
+app.post('/setNotifSettings', setNotifSettings);
+app.post('/deleteNotifSettings', deleteNotifSettings);
 
 // Export Microservice:
 export const notification = functions.https.onRequest(app);
