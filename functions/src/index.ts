@@ -22,4 +22,4 @@ app.post('/deleteNotifSchedule', deleteNotifSchedule);
 
 // Export Microservice:
 export const notification = functions.https.onRequest(app);
-export const sendScheduledNotif = functions.pubsub.schedule('every 1 minutes').onRun(sendNotif);
+export const sendScheduledNotif = functions.pubsub.schedule('every 1 hours').onRun(sendNotif);
