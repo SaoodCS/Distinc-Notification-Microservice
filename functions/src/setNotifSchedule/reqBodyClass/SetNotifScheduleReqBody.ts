@@ -1,7 +1,7 @@
 export type IRecurrenceOptions = 'Daily' | 'Weekly' | 'Monthly' | 'Yearly';
 
 export interface INotifScheduleFormInputs {
-   startDate: string;
+   nextDate: string;
    recurrence: IRecurrenceOptions;
 }
 
@@ -20,8 +20,8 @@ export default class SetNotifScheduleReqBody {
          return false;
       }
       if (notifSchedule) {
-         const { startDate, recurrence } = notifSchedule;
-         if (typeof startDate !== 'string' || typeof recurrence !== 'string') {
+         const { nextDate, recurrence } = notifSchedule;
+         if (typeof nextDate !== 'string' || typeof recurrence !== 'string') {
             return false;
          }
       }
