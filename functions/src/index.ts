@@ -17,6 +17,6 @@ app.get('/getNotifSettings', getNotifSettings);
 app.post('/setNotifSettings', setNotifSettings);
 app.post('/deleteNotifSettings', deleteNotifSettings);
 
-// Export Microservice:
+// Export Microservice and Scheduled Function:
 export const notification = functions.https.onRequest(app);
 export const sendScheduledNotif = functions.pubsub.schedule('every 1 hours').onRun(sendNotif);
