@@ -30,7 +30,7 @@ export default async function sendNotif(): Promise<void> {
             const response = await messaging.send({
                data: {
                   badgeCount: updatedBadgeCount.toString(),
-                  onClickLink: 'https://distinc-dev.web.app/main/distribute',
+                  onClickLink: '/main/distribute',
                   title: 'Distribute Your Income!',
                   body: "It's time to distribute your income!",
                },
