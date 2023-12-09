@@ -30,7 +30,7 @@ export default async function sendNotif(): Promise<void> {
             const response = await messaging.send({
                data: {
                   badgeCount: updatedBadgeCount.toString(),
-                  onClickLink: '/main/distribute',
+                  onClickSubRoute: '/main/distribute',
                   title: 'Distribute Your Income!',
                   body: "It's time to distribute your income!",
                },
