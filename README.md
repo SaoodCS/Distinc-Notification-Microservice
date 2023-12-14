@@ -30,6 +30,6 @@ This is the Notification Microservice for the Distinc application. It is respons
 
 Distinc serves as a comprehensive financial management tool, enabling users to effortlessly track expenses, monitor balances across multiple bank accounts, set account-specific targets, and calculate monthly income distribution among accounts.
 
-<a href="https://github.com/SaoodCS/DistInc-PWA-React-TypeScript-Front-End?tab=readme-ov-file#distinc-web-application" target="_blank">
+<a href="https://github.com/SaoodCS/DistInc-PWA-React-TypeScript-Front-End?tab=readme-ov-file#about" target="_blank">
    For more information about the Distinc application, click here.
 </a>
